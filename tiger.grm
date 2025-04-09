@@ -28,7 +28,23 @@ void yyerror(char *s)
   AND OR ASSIGN
   ARRAY IF THEN ELSE WHILE FOR TO DO LET IN END OF 
   BREAK NIL
-  FUNCTION VAR TYPE 
+  FUNCTION VAR TYPE UMINUS
+
+%nonassoc DEC
+%nonassoc TYPE FUNCTION
+%nonassoc ID
+%nonassoc LBRACK
+%nonassoc ENDIF
+%nonassoc THEN
+%nonassoc ELSE DO
+%nonassoc OF
+%nonassoc EQ NEQ LT LE GT GE
+
+%left ASSIGN
+%left AND OR
+%left PLUS MINUS
+%left TIMES DIVIDE
+%left UMINUS
 
 %start program
 
@@ -41,5 +57,75 @@ void yyerror(char *s)
 
 program:	exp
 
-exp:   ID
+exp: STRING
+      | INT
+      | NIL
+      | MINUS exp %prec UMINUS
+      | lvalue
+      | lvalue ASSIGN exp
+      | exp PLUS  exp
+      | exp MINUS exp
+      | exp TIMES exp
+      | exp DIVIDE exp
+      | exp EQ  exp
+      | exp NEQ exp
+      | exp LT  exp
+      | exp LE  exp
+      | exp GT  exp
+      | exp GE  exp
+      | exp AND exp
+      | exp OR  exp
+      | ID LPAREN exp_list RPAREN
+      | LPAREN exp_seq RPAREN
+      | ID exp_type_id_suf 
+      | IF exp THEN exp %prec ENDIF
+      | IF exp THEN exp ELSE exp 
+      | WHILE exp DO exp
+      | FOR ID ASSIGN exp TO exp DO exp
+      | BREAK
+      | LET decl_list IN exp_seq END
 
+
+exp_type_id_suf: LBRACE field_list RBRACE
+      | LBRACK exp RBRACK OF exp
+      
+
+exp_list: exp 
+      | exp_list COMMA exp
+
+
+exp_seq: exp 
+      | exp_seq SEMICOLON exp
+
+field_list: ID EQ exp
+      | field_list COMMA ID EQ exp
+
+lvalue: ID | lvalue DOT ID | lvalue LBRACK exp RBRACK
+
+decl: type_decl
+      | var_decl
+      | function_decl
+      
+decl_list: decl
+          | decl_list decl
+
+type_decl: TYPE ID EQ type
+
+type: ID
+      | LBRACE type_fields RBRACE
+      | ARRAY OF ID
+
+type_fields: type_field
+            | type_fields COMMA type_field
+
+type_field: ID COLON ID
+
+var_decl: VAR ID var_id_suffix
+        
+var_id_suffix: ASSIGN exp
+        | COLON ID ASSIGN exp
+
+function_decl: FUNCTION ID LPAREN type_fields RPAREN function_id_suffix
+
+function_id_suffix: EQ exp
+            | COLON ID EQ exp

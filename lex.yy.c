@@ -17,7 +17,7 @@ int yyleng; extern unsigned char yytext[];
 int yymorfg;
 extern unsigned char *yysptr, yysbuf[];
 int yytchar;
-FILE *yyin = {stdin}, *yyout = {stdout};
+extern FILE *yyin = NULL, *yyout = NULL;
 extern int yylineno;
 struct yysvf { 
 	struct yywork *yystoff;
@@ -74,7 +74,7 @@ void adjust(void)
 # define S 4
 # define F 6
 # define YYNEWLINE 10
-yylex(){
+int yylex(){
 int nstr; extern int yyprevious;
 while((nstr = yylook()) >= 0)
 yyfussy: switch(nstr){
@@ -1079,7 +1079,7 @@ unsigned char *yysptr = yysbuf;
 int *yyfnd;
 extern struct yysvf *yyestate;
 int yyprevious = YYNEWLINE;
-yylook(){
+int yylook(){
 	register struct yysvf *yystate, **lsp;
 	register struct yywork *yyt;
 	struct yysvf *yyz;
@@ -1239,14 +1239,14 @@ while (*p)
 return(0);
 }
 	/* the following are only used in the lex library */
-yyinput(){
+int yyinput(){
 	return(input());
 	}
-yyoutput(c)
+int yyoutput(c)
   int c; {
 	output(c);
 	}
-yyunput(c)
+int yyunput(c)
    int c; {
 	unput(c);
 	}
