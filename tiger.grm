@@ -77,20 +77,17 @@ exp: STRING
       | exp OR  exp
       | ID LPAREN exp_list RPAREN
       | LPAREN exp_seq RPAREN
-      | ID exp_type_id_suf 
+      | ID LBRACE field_list RBRACE
+      | ID LBRACK exp RBRACK OF exp
       | IF exp THEN exp %prec ENDIF
-      | IF exp THEN exp ELSE exp 
+      | IF exp THEN exp ELSE exp
       | WHILE exp DO exp
       | FOR ID ASSIGN exp TO exp DO exp
       | BREAK
       | LET decl_list IN exp_seq END
 
-
-exp_type_id_suf: LBRACE field_list RBRACE
-      | LBRACK exp RBRACK OF exp
-      
-
-exp_list: exp 
+exp_list: 
+      | exp 
       | exp_list COMMA exp
 
 
@@ -115,8 +112,9 @@ type: ID
       | LBRACE type_fields RBRACE
       | ARRAY OF ID
 
-type_fields: type_field
-            | type_fields COMMA type_field
+type_fields: 
+      | type_field
+      | type_fields COMMA type_field
 
 type_field: ID COLON ID
 
