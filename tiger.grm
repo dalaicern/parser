@@ -3,6 +3,7 @@
 #include "util.h"
 #include "errormsg.h"
 
+int yydebug = 0;
 int yylex(void); /* function prototype */
 
 void yyerror(char *s)
@@ -30,18 +31,22 @@ void yyerror(char *s)
   BREAK NIL
   FUNCTION VAR TYPE UMINUS
 
-%nonassoc DEC
-%nonassoc TYPE FUNCTION
 %nonassoc ID
+%nonassoc ENDLVAL
+%nonassoc WHILE
+%nonassoc DO
 %nonassoc LBRACK
-%nonassoc ENDIF
-%nonassoc THEN
-%nonassoc ELSE DO
+%nonassoc RBRACK
+%nonassoc ENDEXP
 %nonassoc OF
-%nonassoc EQ NEQ LT LE GT GE
+%nonassoc ENDIF
+%nonassoc ELSE
+%nonassoc THEN
+
 
 %left ASSIGN
 %left AND OR
+%nonassoc EQ NEQ LT LE GT GE
 %left PLUS MINUS
 %left TIMES DIVIDE
 %left UMINUS
@@ -61,7 +66,7 @@ exp: STRING
       | INT
       | NIL
       | MINUS exp %prec UMINUS
-      | lvalue
+      | lvalue 
       | lvalue ASSIGN exp
       | exp PLUS  exp
       | exp MINUS exp
@@ -81,7 +86,7 @@ exp: STRING
       | ID LBRACK exp RBRACK OF exp
       | IF exp THEN exp %prec ENDIF
       | IF exp THEN exp ELSE exp
-      | WHILE exp DO exp
+      | WHILE exp DO exp 
       | FOR ID ASSIGN exp TO exp DO exp
       | BREAK
       | LET decl_list IN exp_seq END
@@ -97,7 +102,10 @@ exp_seq: exp
 field_list: ID EQ exp
       | field_list COMMA ID EQ exp
 
-lvalue: ID | lvalue DOT ID | lvalue LBRACK exp RBRACK
+lvalue: ID 
+      | lvalue DOT ID 
+      | lvalue LBRACK exp RBRACK
+      | ID LBRACK exp RBRACK
 
 decl: type_decl
       | var_decl

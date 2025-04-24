@@ -14,13 +14,15 @@ void parse(string fname)
 
 
 int main(int argc, char **argv) {
-//  if (argc!=2) {fprintf(stderr,"usage: a.out filename\n"); exit(1);}
- for(int i = 1; i <= 7; i++){
-  char filename_buffer[20] = "tests/test"; 
-  filename_buffer[10] = i + '0';
-  parse(filename_buffer);
-  printf("\n");
- }
+  if (argc!=2) {fprintf(stderr,"usage: a.out filename\n"); exit(1);}
+  parse(argv[1]); return 0 ;
+
+  // for(int i = 1; i <= 9; i++){
+  //   char filename_buffer[20]; 
+  //   snprintf(filename_buffer, sizeof(filename_buffer), "tests/test%d", i);
+  //   parse(filename_buffer);
+  //   printf("\n");
+  // }
  
  return 0;
 }
