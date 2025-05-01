@@ -31,14 +31,10 @@ void yyerror(char *s)
   BREAK NIL
   FUNCTION VAR TYPE UMINUS
 
-%nonassoc ID
-%nonassoc ENDLVAL
-%nonassoc WHILE
-%nonassoc DO
-%nonassoc LBRACK
-%nonassoc RBRACK
-%nonassoc ENDEXP
 %nonassoc OF
+%nonassoc ID
+%nonassoc WHILE DO FOR
+%nonassoc LBRACK
 %nonassoc ENDIF
 %nonassoc ELSE
 %nonassoc THEN
@@ -46,7 +42,7 @@ void yyerror(char *s)
 
 %left ASSIGN
 %left AND OR
-%nonassoc EQ NEQ LT LE GT GE
+%left EQ NEQ LT LE GT GE
 %left PLUS MINUS
 %left TIMES DIVIDE
 %left UMINUS
